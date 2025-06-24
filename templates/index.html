@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Engine</title>
+</head>
+<body>
+  <h1>Search Problems</h1>
+  <form action="/search" method="get" onsubmit="search(event)">
+    <input type="text" id="query" name="question" placeholder="Enter your query">
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+  <script>
+    async function search(event) {
+      event.preventDefault();
+      const q = document.getElementById("query").value;
+      const res = await fetch(`/search?question=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      const container = document.getElementById("results");
+      container.innerHTML = data.length === 0 ? "<p>No results found.</p>" :
+        data.map(item => `<div>
+          <h3><a href="/problem/${item.id}">${item.title}</a></h3>
+          <p>${item.statement}</p>
+          <small>Score: ${item.score}</small>
+        </div><hr>`).join("");
+    }
+  </script>
+</body>
+</html>
